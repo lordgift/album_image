@@ -8,13 +8,13 @@ typedef SortListBy = int Function(
 );
 mixin PhotoDataProvider on ChangeNotifier {
   /// current gallery album
-  final currentPathNotifier = ValueNotifier<AssetPathEntity?>(null);
+  final currentPathNotifier = ValueNotifier<AssetPathEntity>(null);
 
-  AssetPathEntity? _current;
+  AssetPathEntity _current;
 
-  AssetPathEntity? get currentPath => _current;
+  AssetPathEntity get currentPath => _current;
 
-  set currentPath(AssetPathEntity? current) {
+  set currentPath(AssetPathEntity current) {
     if (_current != current) {
       _current = current;
       currentPathNotifier.value = current;
@@ -97,7 +97,7 @@ class PickerDataProvider extends ChangeNotifier with PhotoDataProvider {
     return picked.indexOf(entity);
   }
 
-  PickerDataProvider({this.picked = const [], required int maxSelectionCount}) {
+  PickerDataProvider({this.picked = const [], int maxSelectionCount}) {
     maxSelection.value = maxSelectionCount;
   }
 }

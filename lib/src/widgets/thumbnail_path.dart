@@ -27,14 +27,11 @@ class ThumbnailPath extends ImageProvider<ThumbnailPath> {
   Future<ui.Codec> _loadAsync(ThumbnailPath key, DecoderCallback decode) async {
     assert(key == this);
 
-    final coverEntity =
-        (await key.entity.getAssetListRange(start: index, end: index + 1))
-            .first;
+    final coverEntity = (await key.entity.getAssetListRange(start: index, end: index + 1)).first;
 
-    final bytes = await coverEntity
-        .thumbnailDataWithSize(ThumbnailSize(thumbSize, thumbSize));
+    final bytes = await coverEntity.thumbnailDataWithSize(ThumbnailSize(thumbSize, thumbSize));
 
-    return decode(bytes!);
+    return decode(bytes);
   }
 
   @override

@@ -6,8 +6,7 @@ import 'package:photo_manager/photo_manager.dart';
 
 import 'enum/album_type.dart';
 
-typedef IconWidgetBuilder = Widget Function(
-    BuildContext context, bool selected, int index);
+typedef IconWidgetBuilder = Widget Function(BuildContext context, bool selected, int index);
 
 class AlbumImagePicker extends StatefulWidget {
   /// maximum images allowed (default 1)
@@ -17,7 +16,7 @@ class AlbumImagePicker extends StatefulWidget {
   final Function(List<AssetEntity>) onSelected;
 
   /// preSelected images
-  final List<AssetEntity>? selected;
+  final List<AssetEntity> selected;
 
   /// The album type when requesting paths.
   ///
@@ -30,7 +29,7 @@ class AlbumImagePicker extends StatefulWidget {
   final int thumbnailQuality;
 
   /// On reach max
-  final VoidCallback? onSelectedMax;
+  final VoidCallback onSelectedMax;
 
   /// thumbnail box fit
   final BoxFit thumbnailBoxFix;
@@ -45,10 +44,10 @@ class AlbumImagePicker extends StatefulWidget {
   final EdgeInsets gridPadding;
 
   /// gridView physics
-  final ScrollPhysics? scrollPhysics;
+  final ScrollPhysics scrollPhysics;
 
   /// gridView controller
-  final ScrollController? scrollController;
+  final ScrollController scrollController;
 
   /// gridView background color
   final Color listBackgroundColor;
@@ -64,13 +63,13 @@ class AlbumImagePicker extends StatefulWidget {
 
   ///Icon widget builder
   ///index = -1, not selected yet
-  final IconWidgetBuilder? iconSelectionBuilder;
+  final IconWidgetBuilder iconSelectionBuilder;
 
   ///Close widget
-  final Widget? closeWidget;
+  final Widget closeWidget;
 
   ///appBar actions widgets
-  final List<Widget>? appBarActionWidgets;
+  final List<Widget> appBarActionWidgets;
 
   /// album header text color
   final TextStyle albumHeaderTextStyle;
@@ -91,9 +90,9 @@ class AlbumImagePicker extends StatefulWidget {
   final Color albumDividerColor;
 
   const AlbumImagePicker(
-      {Key? key,
+      {Key key,
       this.maxSelection = 1,
-      required this.onSelected,
+      this.onSelected,
       this.selected,
       this.type = AlbumType.all,
       this.thumbnailBoxFix = BoxFit.cover,
@@ -107,8 +106,7 @@ class AlbumImagePicker extends StatefulWidget {
       this.appBarColor = Colors.redAccent,
       this.albumTextStyle = const TextStyle(color: Colors.white, fontSize: 18),
       this.albumHeaderTextStyle = const TextStyle(color: Colors.white, fontSize: 18),
-      this.albumSubTextStyle =
-          const TextStyle(color: Colors.white, fontSize: 14),
+      this.albumSubTextStyle = const TextStyle(color: Colors.white, fontSize: 14),
       this.appBarHeight = 45,
       this.albumBackGroundColor = const Color(0xFF333333),
       this.albumDividerColor = const Color(0xFF484848),
@@ -124,10 +122,9 @@ class AlbumImagePicker extends StatefulWidget {
   _AlbumImagePickerState createState() => _AlbumImagePickerState();
 }
 
-class _AlbumImagePickerState extends State<AlbumImagePicker>
-    with AutomaticKeepAliveClientMixin {
+class _AlbumImagePickerState extends State<AlbumImagePicker> with AutomaticKeepAliveClientMixin {
   /// create object of PickerDataProvider
-  late PickerDataProvider provider;
+  PickerDataProvider provider;
 
   @override
   void initState() {
@@ -151,15 +148,12 @@ class _AlbumImagePickerState extends State<AlbumImagePicker>
   }
 
   void _initProvider() {
-    provider = PickerDataProvider(
-        picked: widget.selected ?? [], maxSelectionCount: widget.maxSelection);
+    provider = PickerDataProvider(picked: widget.selected ?? [], maxSelectionCount: widget.maxSelection);
     provider.onPickMax.addListener(onPickMax);
   }
 
   void _getPermission() async {
-    var result = await PhotoManager.requestPermissionExtend(
-        requestOption: const PermisstionRequestOption(
-            iosAccessLevel: IosAccessLevel.readWrite));
+    var result = await PhotoManager.requestPermissionExtend(requestOption: const PermissionRequestOption(iosAccessLevel: IosAccessLevel.readWrite));
     if (result.isAuth) {
       PhotoManager.startChangeNotify();
       PhotoManager.addChangeCallback((value) {
@@ -175,7 +169,7 @@ class _AlbumImagePickerState extends State<AlbumImagePicker>
   }
 
   void _refreshPathList() {
-    late RequestType type;
+    RequestType type;
     switch (widget.type) {
       case AlbumType.all:
         type = RequestType.common;
@@ -220,7 +214,7 @@ class _AlbumImagePickerState extends State<AlbumImagePicker>
 
         /// grid image view
         Expanded(
-          child: ValueListenableBuilder<AssetPathEntity?>(
+          child: ValueListenableBuilder<AssetPathEntity>(
             valueListenable: provider.currentPathNotifier,
             builder: (context, currentPath, child) => currentPath != null
                 ? GalleryGridView(
@@ -237,8 +231,7 @@ class _AlbumImagePickerState extends State<AlbumImagePicker>
                     selectedBackgroundColor: widget.selectedItemBackgroundColor,
                     iconSelectionBuilder: widget.iconSelectionBuilder,
                     thumbnailBoxFix: widget.thumbnailBoxFix,
-                    selectedCheckBackgroundColor:
-                        widget.selectedItemBackgroundColor,
+                    selectedCheckBackgroundColor: widget.selectedItemBackgroundColor,
                     onAssetItemClick: (ctx, asset, index) async {
                       provider.pickEntity(asset);
                       widget.onSelected(provider.picked);

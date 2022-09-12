@@ -1,22 +1,23 @@
 name: album_image
 description: Album Image is based in photo_manager package and has the same concept as image_picker, whether it is Android or iOS.
 version: 0.0.1+2
-homepage: https://github.com/phuongtinhbien/album_image.git
-repository: https://github.com/phuongtinhbien/album_image.git
+#homepage: https://github.com/phuongtinhbien/album_image.git
+#repository: https://github.com/phuongtinhbien/album_image.git
 
 environment:
-  sdk: ">=2.16.2 <3.0.0"
-  flutter: ">=2.5.0"
+  sdk: ">=2.10.2 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  photo_manager: ^2.1.1
+  photo_manager:
+    git:
+      url: git@github.com:fastworkco/flutter_photo_manager.git
+      ref: 97486ee114b62a13db4ee86f0baee796aee4718e
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^1.0.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

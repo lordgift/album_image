@@ -21,7 +21,7 @@ class ThumbnailImageWidget extends StatelessWidget {
   final Color selectedBackgroundColor;
 
   /// builder icon selection
-  final IconWidgetBuilder? iconSelectionBuilder;
+  final IconWidgetBuilder iconSelectionBuilder;
 
   /// selected Check Background Color
   final Color selectedCheckBackgroundColor;
@@ -30,9 +30,9 @@ class ThumbnailImageWidget extends StatelessWidget {
   final BoxFit fit;
 
   const ThumbnailImageWidget({
-    Key? key,
-    required this.asset,
-    required this.provider,
+    Key key,
+     this.asset,
+     this.provider,
     this.thumbnailQuality = 200,
     this.imageBackgroundColor = Colors.white,
     this.selectedBackgroundColor = Colors.white,
@@ -51,7 +51,7 @@ class ThumbnailImageWidget extends StatelessWidget {
         ),
 
         /// thumbnail image
-        FutureBuilder<Uint8List?>(
+        FutureBuilder<Uint8List>(
           future: asset.thumbnailDataWithSize(
               ThumbnailSize(thumbnailQuality, thumbnailQuality)),
           builder: (_, data) {
@@ -60,7 +60,7 @@ class ThumbnailImageWidget extends StatelessWidget {
                 width: double.infinity,
                 height: double.infinity,
                 child: Image.memory(
-                  data.data!,
+                  data.data,
                   gaplessPlayback: true,
                   fit: fit,
                 ),
@@ -95,7 +95,7 @@ class ThumbnailImageWidget extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(right: 5, top: 5),
                       child: iconSelectionBuilder != null
-                          ? iconSelectionBuilder!
+                          ? iconSelectionBuilder
                               .call(context, picked, pickIndex)
                           : defaultIconSelectionBuilder(context, picked),
                     ),

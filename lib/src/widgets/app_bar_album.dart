@@ -25,23 +25,22 @@ class AppBarAlbum extends StatelessWidget {
   final Color albumDividerColor;
 
   /// appBar leading widget
-  final Widget? appBarLeadingWidget;
+  final Widget appBarLeadingWidget;
 
   ///appBar actions widgets
-  final List<Widget>? appBarActionWidgets;
+  final List<Widget> appBarActionWidgets;
 
   final double height;
 
   const AppBarAlbum(
-      {Key? key,
-      required this.provider,
-      required this.appBarColor,
-      required this.albumBackGroundColor,
-      required this.albumDividerColor,
+      {Key key,
+      this.provider,
+      this.appBarColor,
+      this.albumBackGroundColor,
+      this.albumDividerColor,
       this.albumHeaderTextStyle = const TextStyle(color: Colors.white, fontSize: 18),
       this.albumTextStyle = const TextStyle(color: Colors.white, fontSize: 18),
-      this.albumSubTextStyle =
-          const TextStyle(color: Colors.white, fontSize: 14),
+      this.albumSubTextStyle = const TextStyle(color: Colors.white, fontSize: 14),
       this.height = 65,
       this.appBarLeadingWidget,
       this.appBarActionWidgets})
@@ -85,8 +84,7 @@ class AppBarAlbum extends StatelessWidget {
         onTap: () {
           showModalBottomSheet(
               context: context,
-              constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height / 2.5),
+              // constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height / 2.5),
               enableDrag: true,
               backgroundColor: Colors.transparent,
               builder: (_) {
@@ -110,7 +108,7 @@ class AppBarAlbum extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                provider.currentPath!.name,
+                provider.currentPath.name,
                 overflow: TextOverflow.ellipsis,
                 style: albumHeaderTextStyle,
               ),
@@ -119,8 +117,8 @@ class AppBarAlbum extends StatelessWidget {
                 child: AnimatedBuilder(
                   child: Icon(
                     Icons.keyboard_arrow_down,
-                    color: albumHeaderTextStyle.color!,
-                    size: albumHeaderTextStyle.fontSize! * 1.5,
+                    color: albumHeaderTextStyle.color,
+                    size: albumHeaderTextStyle.fontSize * 1.5,
                   ),
                   animation: arrowDownNotifier,
                   builder: (BuildContext context, child) {
@@ -147,10 +145,10 @@ class ChangePathWidget extends StatefulWidget {
   final Color albumBackGroundColor;
 
   /// album text color
-  final TextStyle? albumTextStyle;
+  final TextStyle albumTextStyle;
 
   /// album text sub color
-  final TextStyle? albumSubTextStyle;
+  final TextStyle albumSubTextStyle;
 
   /// album divider color
   final Color albumDividerColor;
@@ -158,11 +156,11 @@ class ChangePathWidget extends StatefulWidget {
   final double itemHeight;
 
   const ChangePathWidget(
-      {Key? key,
-      required this.provider,
-      required this.close,
-      required this.albumBackGroundColor,
-      required this.albumDividerColor,
+      {Key key,
+      this.provider,
+      this.close,
+      this.albumBackGroundColor,
+      this.albumDividerColor,
       this.albumTextStyle,
       this.albumSubTextStyle,
       this.itemHeight = 65})
@@ -175,24 +173,22 @@ class ChangePathWidget extends StatefulWidget {
 class _ChangePathWidgetState extends State<ChangePathWidget> {
   PickerDataProvider get provider => widget.provider;
 
-  late ScrollController controller;
+  ScrollController controller;
 
-  late int currentIndex;
+  int currentIndex;
 
   @override
   void initState() {
     super.initState();
-    currentIndex = provider.pathList.indexOf(provider.currentPath!);
-    controller =
-        ScrollController(initialScrollOffset: widget.itemHeight * currentIndex);
+    currentIndex = provider.pathList.indexOf(provider.currentPath);
+    controller = ScrollController(initialScrollOffset: widget.itemHeight * currentIndex);
   }
 
   @override
   Widget build(BuildContext context) {
     return Material(
       color: widget.albumBackGroundColor,
-      borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+      borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
       child: MediaQuery.removePadding(
         removeTop: true,
         context: context,
@@ -202,8 +198,7 @@ class _ChangePathWidgetState extends State<ChangePathWidget> {
               width: 24,
               height: 4,
               margin: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  color: Colors.grey, borderRadius: BorderRadius.circular(18)),
+              decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(18)),
             ),
             Expanded(
               child: ListView.separated(
@@ -247,8 +242,7 @@ class _ChangePathWidgetState extends State<ChangePathWidget> {
                     Text(
                       item.name,
                       overflow: TextOverflow.ellipsis,
-                      style: widget.albumTextStyle ??
-                          const TextStyle(color: Colors.white, fontSize: 18),
+                      style: widget.albumTextStyle ?? const TextStyle(color: Colors.white, fontSize: 18),
                     ),
                     const SizedBox(
                       height: 4,
@@ -256,8 +250,7 @@ class _ChangePathWidgetState extends State<ChangePathWidget> {
                     Text(
                       '${item.assetCount}',
                       overflow: TextOverflow.ellipsis,
-                      style: widget.albumSubTextStyle ??
-                          const TextStyle(color: Colors.white, fontSize: 14),
+                      style: widget.albumSubTextStyle ?? const TextStyle(color: Colors.white, fontSize: 14),
                     ),
                   ],
                 ),

@@ -6,7 +6,7 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({Key key}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> {
             },
             albumBackGroundColor: Colors.white,
             appBarHeight: 45,
-            itemBackgroundColor: Colors.grey[100]!,
+            itemBackgroundColor: Colors.grey[100],
             appBarColor: Colors.white,
             albumTextStyle: const TextStyle(color: Colors.black, fontSize: 14),
             albumSubTextStyle:

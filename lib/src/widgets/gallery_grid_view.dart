@@ -5,15 +5,14 @@ import 'package:flutter/material.dart';
 
 import 'package:photo_manager/photo_manager.dart';
 
-typedef OnAssetItemClick = void Function(
-    BuildContext context, AssetEntity entity, int index);
+typedef OnAssetItemClick = void Function(BuildContext context, AssetEntity entity, int index);
 
 class GalleryGridView extends StatefulWidget {
   /// asset album
   final AssetPathEntity path;
 
   /// on tap thumbnail
-  final OnAssetItemClick? onAssetItemClick;
+  final OnAssetItemClick onAssetItemClick;
 
   /// picker data provider
   final PickerDataProvider provider;
@@ -28,19 +27,19 @@ class GalleryGridView extends StatefulWidget {
   final Color gridViewBackgroundColor;
 
   /// gridView Padding
-  final EdgeInsets? padding;
+  final EdgeInsets padding;
 
   /// gridView physics
-  final ScrollPhysics? gridViewPhysics;
+  final ScrollPhysics gridViewPhysics;
 
   /// gridView controller
-  final ScrollController? gridViewController;
+  final ScrollController gridViewController;
 
   /// selected background color
   final Color selectedBackgroundColor;
 
   /// builder icon selection
-  final IconWidgetBuilder? iconSelectionBuilder;
+  final IconWidgetBuilder iconSelectionBuilder;
 
   /// selected Check Background Color
   final Color selectedCheckBackgroundColor;
@@ -55,9 +54,9 @@ class GalleryGridView extends StatefulWidget {
   final int thumbnailQuality;
 
   const GalleryGridView(
-      {Key? key,
-      required this.path,
-      required this.provider,
+      {Key key,
+      this.path,
+      this.provider,
       this.onAssetItemClick,
       this.childAspectRatio = 0.5,
       this.gridViewBackgroundColor = Colors.white,
@@ -78,7 +77,7 @@ class GalleryGridView extends StatefulWidget {
 }
 
 class _GalleryGridViewState extends State<GalleryGridView> {
-  static Map<int?, AssetEntity?> _createMap() {
+  static Map<int, AssetEntity> _createMap() {
     return {};
   }
 
@@ -108,8 +107,7 @@ class _GalleryGridViewState extends State<GalleryGridView> {
           ),
 
           /// render thumbnail
-          itemBuilder: (context, index) =>
-              _buildItem(context, index, widget.provider),
+          itemBuilder: (context, index) => _buildItem(context, index, widget.provider),
           itemCount: widget.path.assetCount,
         ),
       ),
@@ -120,9 +118,7 @@ class _GalleryGridViewState extends State<GalleryGridView> {
     return GestureDetector(
       /// on tap thumbnail
       onTap: () async {
-        final asset = cacheMap[index] ??
-            (await widget.path
-                .getAssetListRange(start: index, end: index + 1))[0];
+        final asset = cacheMap[index] ?? (await widget.path.getAssetListRange(start: index, end: index + 1))[0];
         widget.onAssetItemClick?.call(context, asset, index);
       },
 
@@ -131,15 +127,13 @@ class _GalleryGridViewState extends State<GalleryGridView> {
     );
   }
 
-  Widget _buildScrollItem(
-      BuildContext context, int index, PickerDataProvider provider) {
+  Widget _buildScrollItem(BuildContext context, int index, PickerDataProvider provider) {
     /// load cache images
     return FutureBuilder<List<AssetEntity>>(
       future: widget.path.getAssetListRange(start: index, end: index + 1),
       builder: (ctx, snapshot) {
         final cachedImage = cacheMap[index];
-        if (cachedImage == null &&
-            (!snapshot.hasData || snapshot.data!.isEmpty)) {
+        if (cachedImage == null && (!snapshot.hasData || snapshot.data.isEmpty)) {
           return Container(
             width: double.infinity,
             height: double.infinity,
@@ -147,7 +141,7 @@ class _GalleryGridViewState extends State<GalleryGridView> {
           );
         }
 
-        final asset = cachedImage ?? snapshot.data!.first;
+        final asset = cachedImage ?? snapshot.data.first;
         cacheMap[index] = asset;
 
         /// thumbnail widget
