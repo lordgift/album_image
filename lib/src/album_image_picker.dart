@@ -104,9 +104,9 @@ class AlbumImagePicker extends StatefulWidget {
       this.itemBackgroundColor = Colors.grey,
       this.selectedItemBackgroundColor = Colors.grey,
       this.appBarColor = Colors.redAccent,
-      this.albumTextStyle = const TextStyle(color: Colors.white, fontSize: 18),
-      this.albumHeaderTextStyle = const TextStyle(color: Colors.white, fontSize: 18),
-      this.albumSubTextStyle = const TextStyle(color: Colors.white, fontSize: 14),
+      this.albumTextStyle = const TextStyle(color: Colors.black, fontSize: 18),
+      this.albumHeaderTextStyle = const TextStyle(color: Colors.black, fontSize: 18),
+      this.albumSubTextStyle = const TextStyle(color: Colors.black, fontSize: 14),
       this.appBarHeight = 45,
       this.albumBackGroundColor = const Color(0xFF333333),
       this.albumDividerColor = const Color(0xFF484848),
@@ -128,6 +128,7 @@ class _AlbumImagePickerState extends State<AlbumImagePicker> with AutomaticKeepA
 
   @override
   void initState() {
+    PhotoManager.setIgnorePermissionCheck(true);
     _initProvider();
     _getPermission();
     super.initState();

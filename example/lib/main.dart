@@ -22,9 +22,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: Builder(builder: (context) {
-          final thumbnailQuality = MediaQuery.of(context).size.width ~/ 3;
-          return AlbumImagePicker(
+        body: AlbumImagePicker(
             onSelected: (items) {},
             iconSelectionBuilder: (_, selected, index) {
               if (selected) {
@@ -54,9 +52,9 @@ class _MyAppState extends State<MyApp> {
             closeWidget: const BackButton(
               color: Colors.black,
             ),
-            thumbnailQuality: thumbnailQuality * 3,
-          );
-        }),
+
+          ),
+
       ),
     );
   }

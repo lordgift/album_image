@@ -38,9 +38,9 @@ class AppBarAlbum extends StatelessWidget {
       this.appBarColor,
       this.albumBackGroundColor,
       this.albumDividerColor,
-      this.albumHeaderTextStyle = const TextStyle(color: Colors.white, fontSize: 18),
-      this.albumTextStyle = const TextStyle(color: Colors.white, fontSize: 18),
-      this.albumSubTextStyle = const TextStyle(color: Colors.white, fontSize: 14),
+      this.albumHeaderTextStyle = const TextStyle(color: Colors.black, fontSize: 18),
+      this.albumTextStyle = const TextStyle(color: Colors.black, fontSize: 18),
+      this.albumSubTextStyle = const TextStyle(color: Colors.black, fontSize: 14),
       this.height = 65,
       this.appBarLeadingWidget,
       this.appBarActionWidgets})
