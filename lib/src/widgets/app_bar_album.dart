@@ -30,42 +30,44 @@ class AppBarAlbum extends StatelessWidget {
   ///appBar actions widgets
   final List<Widget> appBarActionWidgets;
 
+  ///onPressed Action Widgets.
+  final ValueChanged<List<AssetEntity>> onDone;
+
   final double height;
 
-  const AppBarAlbum(
-      {Key key,
-      this.provider,
-      this.appBarColor,
-      this.albumBackGroundColor,
-      this.albumDividerColor,
-      this.albumHeaderTextStyle = const TextStyle(color: Colors.black, fontSize: 18),
-      this.albumTextStyle = const TextStyle(color: Colors.black, fontSize: 18),
-      this.albumSubTextStyle = const TextStyle(color: Colors.black, fontSize: 14),
-      this.height = 65,
-      this.appBarLeadingWidget,
-      this.appBarActionWidgets})
+  const AppBarAlbum({Key key,
+    this.provider,
+    this.appBarColor,
+    this.albumBackGroundColor,
+    this.albumDividerColor,
+    this.albumHeaderTextStyle = const TextStyle(color: Colors.black, fontSize: 18),
+    this.albumTextStyle = const TextStyle(color: Colors.black, fontSize: 18),
+    this.albumSubTextStyle = const TextStyle(color: Colors.black, fontSize: 14),
+    this.height = 65,
+    this.appBarLeadingWidget,
+    this.appBarActionWidgets,
+    this.onDone})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: provider.currentPathNotifier,
-      builder: (_, value, __) => AppBar(
-        automaticallyImplyLeading: false,
-        leading: appBarLeadingWidget,
-        toolbarHeight: height,
-        backgroundColor: appBarColor,
-        actions: appBarActionWidgets,
-        title: _buildAlbumButton(context, ValueNotifier(false)),
-        centerTitle: true,
-      ),
+      builder: (_, value, __) =>
+          AppBar(
+            automaticallyImplyLeading: false,
+            leading: appBarLeadingWidget,
+            toolbarHeight: height,
+            backgroundColor: appBarColor,
+            actions: [_buildActionButton(context)],
+            title: _buildAlbumButton(context, ValueNotifier(false)),
+            centerTitle: true,
+          ),
     );
   }
 
-  Widget _buildAlbumButton(
-    BuildContext context,
-    ValueNotifier<bool> arrowDownNotifier,
-  ) {
+  Widget _buildAlbumButton(BuildContext context,
+      ValueNotifier<bool> arrowDownNotifier,) {
     if (provider.pathList.isEmpty || provider.currentPath == null) {
       return Container();
     }
@@ -135,6 +137,38 @@ class AppBarAlbum extends StatelessWidget {
       );
     }
   }
+
+  Widget _buildActionButton(BuildContext context) {
+    return ValueListenableBuilder(
+          valueListenable: provider.pickedNotifier,
+          builder: (_, value, __) =>
+              TextButton(
+                key: Key('button'),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.done_rounded,color: Colors.black,
+                    ),
+                    Text(
+                      ' (${provider.picked.length})',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+                onPressed: provider.picked.length > 0 ? () => onDone(provider.picked) : () => Navigator.pop(context),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                  // shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(3))),
+                ),
+              )
+      );
+  }
 }
 
 class ChangePathWidget extends StatefulWidget {
@@ -155,15 +189,14 @@ class ChangePathWidget extends StatefulWidget {
 
   final double itemHeight;
 
-  const ChangePathWidget(
-      {Key key,
-      this.provider,
-      this.close,
-      this.albumBackGroundColor,
-      this.albumDividerColor,
-      this.albumTextStyle,
-      this.albumSubTextStyle,
-      this.itemHeight = 65})
+  const ChangePathWidget({Key key,
+    this.provider,
+    this.close,
+    this.albumBackGroundColor,
+    this.albumDividerColor,
+    this.albumTextStyle,
+    this.albumSubTextStyle,
+    this.itemHeight = 65})
       : super(key: key);
 
   @override

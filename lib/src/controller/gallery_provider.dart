@@ -69,6 +69,8 @@ class PickerDataProvider extends ChangeNotifier with PhotoDataProvider {
 
   bool get singleMode => maxSelection.value == 1;
 
+  // int get selectedImageCount => picked.length;
+
   void pickEntity(AssetEntity entity) {
     if (singleMode) {
       if (picked.contains(entity)) {

@@ -89,6 +89,9 @@ class AlbumImagePicker extends StatefulWidget {
   /// album divider color
   final Color albumDividerColor;
 
+  ///
+  final ValueChanged<List<AssetEntity>> onDone;
+
   const AlbumImagePicker(
       {Key key,
       this.maxSelection = 1,
@@ -115,7 +118,8 @@ class AlbumImagePicker extends StatefulWidget {
       this.iconSelectionBuilder,
       this.scrollPhysics,
       this.scrollController,
-      this.onSelectedMax})
+      this.onSelectedMax,
+      this.onDone})
       : super(key: key);
 
   @override
@@ -182,7 +186,7 @@ class _AlbumImagePickerState extends State<AlbumImagePicker> with AutomaticKeepA
         type = RequestType.video;
         break;
     }
-    PhotoManager.getAssetPathList(type: type).then((pathList) {
+    PhotoManager.getAssetPathList(type: type, filterOption: FilterOptionGroup()..containsPathModified = true).then((pathList) {
       /// don't delete setState
       setState(() {
         provider.resetPathList(pathList);
@@ -211,6 +215,7 @@ class _AlbumImagePickerState extends State<AlbumImagePicker> with AutomaticKeepA
           height: widget.appBarHeight,
           appBarLeadingWidget: widget.closeWidget ?? _defaultCloseWidget(),
           appBarActionWidgets: widget.appBarActionWidgets,
+          onDone: widget.onDone,
         ),
 
         /// grid image view
@@ -235,7 +240,7 @@ class _AlbumImagePickerState extends State<AlbumImagePicker> with AutomaticKeepA
                     selectedCheckBackgroundColor: widget.selectedItemBackgroundColor,
                     onAssetItemClick: (ctx, asset, index) async {
                       provider.pickEntity(asset);
-                      widget.onSelected(provider.picked);
+                      // widget.onSelected(provider.picked);
                     },
                   )
                 : Container(),
