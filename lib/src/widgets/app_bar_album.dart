@@ -161,7 +161,10 @@ class AppBarAlbum extends StatelessWidget {
                     ),
                   ],
                 ),
-                onPressed: provider.picked.length > 0 ? () => onDone(provider.picked) : () => Navigator.pop(context),
+                onPressed: provider.picked.length > 0 ? () {
+                  onDone(provider.picked);
+                  Navigator.pop(context);
+                }: () => Navigator.pop(context),
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.transparent),
                   // shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(3))),
