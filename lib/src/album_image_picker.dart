@@ -14,7 +14,7 @@ class AlbumImagePicker extends StatefulWidget {
   final int maxSelection;
 
   /// return all selected images
-  final Function(List<AssetEntity>) onSelected;
+  final Function(List<AssetEntity>)? onSelected;
 
   /// preSelected images
   final List<AssetEntity>? selected;
@@ -90,10 +90,13 @@ class AlbumImagePicker extends StatefulWidget {
   /// album divider color
   final Color albumDividerColor;
 
+  ///
+  final ValueChanged<List<AssetEntity>> onDone;
+
   const AlbumImagePicker(
       {Key? key,
       this.maxSelection = 1,
-      required this.onSelected,
+      this.onSelected,
       this.selected,
       this.type = AlbumType.all,
       this.thumbnailBoxFix = BoxFit.cover,
@@ -117,7 +120,8 @@ class AlbumImagePicker extends StatefulWidget {
       this.iconSelectionBuilder,
       this.scrollPhysics,
       this.scrollController,
-      this.onSelectedMax})
+      this.onSelectedMax,
+      required this.onDone})
       : super(key: key);
 
   @override
@@ -216,6 +220,7 @@ class _AlbumImagePickerState extends State<AlbumImagePicker>
           height: widget.appBarHeight,
           appBarLeadingWidget: widget.closeWidget ?? _defaultCloseWidget(),
           appBarActionWidgets: widget.appBarActionWidgets,
+          onDone: widget.onDone,
         ),
 
         /// grid image view
@@ -241,7 +246,7 @@ class _AlbumImagePickerState extends State<AlbumImagePicker>
                         widget.selectedItemBackgroundColor,
                     onAssetItemClick: (ctx, asset, index) async {
                       provider.pickEntity(asset);
-                      widget.onSelected(provider.picked);
+                      // widget.onSelected(provider.picked);
                     },
                   )
                 : Container(),

@@ -30,6 +30,9 @@ class AppBarAlbum extends StatelessWidget {
   ///appBar actions widgets
   final List<Widget>? appBarActionWidgets;
 
+  ///onPressed Action Widgets.
+  final ValueChanged<List<AssetEntity>> onDone;
+
   final double height;
 
   const AppBarAlbum(
@@ -44,7 +47,8 @@ class AppBarAlbum extends StatelessWidget {
           const TextStyle(color: Colors.white, fontSize: 14),
       this.height = 65,
       this.appBarLeadingWidget,
-      this.appBarActionWidgets})
+      this.appBarActionWidgets,
+      required this.onDone})
       : super(key: key);
 
   @override
@@ -56,7 +60,7 @@ class AppBarAlbum extends StatelessWidget {
         leading: appBarLeadingWidget,
         toolbarHeight: height,
         backgroundColor: appBarColor,
-        actions: appBarActionWidgets,
+        actions: [_buildActionButton(context)],
         title: _buildAlbumButton(context, ValueNotifier(false)),
         centerTitle: true,
       ),
@@ -137,7 +141,43 @@ class AppBarAlbum extends StatelessWidget {
       );
     }
   }
+  Widget _buildActionButton(BuildContext context) {
+    return ValueListenableBuilder(
+        valueListenable: provider.pickedNotifier,
+        builder: (_, value, __) =>
+            TextButton(
+              key: const Key('button'),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.done_rounded,color: Colors.black,
+                  ),
+                  Text(
+                    ' (${provider.picked.length})',
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+              onPressed: provider.picked.isNotEmpty ? () {
+                onDone(provider.picked);
+                Navigator.pop(context);
+              }: () => Navigator.pop(context),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                // shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(3))),
+              ),
+            )
+    );
+  }
 }
+
+
 
 class ChangePathWidget extends StatefulWidget {
   final PickerDataProvider provider;
@@ -266,7 +306,7 @@ class _ChangePathWidgetState extends State<ChangePathWidget> {
             AnimatedOpacity(
               opacity: currentIndex == index ? 1.0 : 0.0,
               duration: const Duration(milliseconds: 200),
-              child: Icon(Icons.check),
+              child: const Icon(Icons.check),
             )
           ],
         ),
