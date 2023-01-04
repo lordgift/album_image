@@ -35,20 +35,27 @@ class AppBarAlbum extends StatelessWidget {
 
   final double height;
 
+  final bool centerTitle;
+
+  final Widget? emptyAlbumThumbnail;
+
   const AppBarAlbum(
       {Key? key,
       required this.provider,
       required this.appBarColor,
       required this.albumBackGroundColor,
       required this.albumDividerColor,
-      this.albumHeaderTextStyle = const TextStyle(color: Colors.white, fontSize: 18),
+      this.albumHeaderTextStyle =
+          const TextStyle(color: Colors.white, fontSize: 18),
       this.albumTextStyle = const TextStyle(color: Colors.white, fontSize: 18),
       this.albumSubTextStyle =
           const TextStyle(color: Colors.white, fontSize: 14),
       this.height = 65,
+      this.centerTitle = true,
       this.appBarLeadingWidget,
       this.appBarActionWidgets,
-      required this.onDone})
+      required this.onDone,
+      this.emptyAlbumThumbnail})
       : super(key: key);
 
   @override
@@ -62,7 +69,7 @@ class AppBarAlbum extends StatelessWidget {
         backgroundColor: appBarColor,
         actions: [_buildActionButton(context)],
         title: _buildAlbumButton(context, ValueNotifier(false)),
-        centerTitle: true,
+        centerTitle: centerTitle,
       ),
     );
   }
@@ -86,31 +93,11 @@ class AppBarAlbum extends StatelessWidget {
       );
     } else {
       return GestureDetector(
-        onTap: () {
-          showModalBottomSheet(
-              context: context,
-              constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height / 2.5),
-              enableDrag: true,
-              backgroundColor: Colors.transparent,
-              builder: (_) {
-                return ChangePathWidget(
-                  albumDividerColor: albumDividerColor,
-                  albumTextStyle: albumTextStyle,
-                  albumSubTextStyle: albumSubTextStyle,
-                  provider: provider,
-                  itemHeight: 45,
-                  close: (value) {
-                    provider.currentPath = value;
-                    Navigator.pop(context);
-                  },
-                  albumBackGroundColor: albumBackGroundColor,
-                );
-              });
-        },
+        onTap: () => onSelectAlbum(context),
         child: Container(
           decoration: decoration,
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
@@ -121,11 +108,6 @@ class AppBarAlbum extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 4),
                 child: AnimatedBuilder(
-                  child: Icon(
-                    Icons.keyboard_arrow_down,
-                    color: albumHeaderTextStyle.color!,
-                    size: albumHeaderTextStyle.fontSize! * 1.5,
-                  ),
                   animation: arrowDownNotifier,
                   builder: (BuildContext context, child) {
                     return AnimatedContainer(
@@ -133,6 +115,11 @@ class AppBarAlbum extends StatelessWidget {
                       child: child,
                     );
                   },
+                  child: Icon(
+                    Icons.keyboard_arrow_down,
+                    color: albumHeaderTextStyle.color!,
+                    size: albumHeaderTextStyle.fontSize! * 1.5,
+                  ),
                 ),
               ),
             ],
@@ -141,18 +128,27 @@ class AppBarAlbum extends StatelessWidget {
       );
     }
   }
+
   Widget _buildActionButton(BuildContext context) {
     return ValueListenableBuilder(
         valueListenable: provider.pickedNotifier,
         builder: (_, value, __) =>
             TextButton(
               key: const Key('button'),
+              onPressed: provider.picked.isNotEmpty ? () {
+                onDone(provider.picked);
+                Navigator.pop(context);
+              } : () => Navigator.pop(context),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                // shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(3))),
+              ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Icon(
-                    Icons.done_rounded,color: Colors.black,
+                    Icons.done_rounded, color: Colors.black,
                   ),
                   Text(
                     ' (${provider.picked.length})',
@@ -164,16 +160,31 @@ class AppBarAlbum extends StatelessWidget {
                   ),
                 ],
               ),
-              onPressed: provider.picked.isNotEmpty ? () {
-                onDone(provider.picked);
-                Navigator.pop(context);
-              }: () => Navigator.pop(context),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.transparent),
-                // shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(3))),
-              ),
             )
     );
+  }
+
+  void onSelectAlbum(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        constraints:
+            BoxConstraints(maxHeight: MediaQuery.of(context).size.height / 2.5),
+        enableDrag: true,
+        backgroundColor: Colors.transparent,
+        builder: (_) {
+          return ChangePathWidget(
+            albumDividerColor: albumDividerColor,
+            albumTextStyle: albumTextStyle,
+            albumSubTextStyle: albumSubTextStyle,
+            provider: provider,
+            itemHeight: 45,
+            close: (value) {
+              provider.currentPath = value;
+              Navigator.pop(context);
+            },
+            albumBackGroundColor: albumBackGroundColor,
+          );
+        });
   }
 }
 
@@ -197,6 +208,8 @@ class ChangePathWidget extends StatefulWidget {
 
   final double itemHeight;
 
+  final Widget? emptyAlbumThumbnail;
+
   const ChangePathWidget(
       {Key? key,
       required this.provider,
@@ -205,6 +218,7 @@ class ChangePathWidget extends StatefulWidget {
       required this.albumDividerColor,
       this.albumTextStyle,
       this.albumSubTextStyle,
+      this.emptyAlbumThumbnail,
       this.itemHeight = 65})
       : super(key: key);
 
@@ -265,19 +279,35 @@ class _ChangePathWidgetState extends State<ChangePathWidget> {
 
   Widget _buildItem(BuildContext context, int index) {
     final item = provider.pathList[index];
+
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        widget.close.call(item);
+      },
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: Row(
           children: [
-            ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: Image(
-                  image: ThumbnailPath(item, thumbSize: 100),
-                  fit: BoxFit.cover,
-                  width: widget.itemHeight,
-                  height: widget.itemHeight,
-                )),
+            FutureBuilder<int>(
+                future: item.assetCountAsync,
+                builder: (context, snapshot) {
+                  if (snapshot.data != null && snapshot.data! > 0) {
+                    return ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: Image(
+                          image: ThumbnailPath(item, thumbSize: 100),
+                          fit: BoxFit.cover,
+                          width: widget.itemHeight,
+                          height: widget.itemHeight,
+                        ));
+                  }
+                  return SizedBox(
+                    width: widget.itemHeight,
+                    height: widget.itemHeight,
+                    child: widget.emptyAlbumThumbnail,
+                  );
+                }),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -311,10 +341,6 @@ class _ChangePathWidgetState extends State<ChangePathWidget> {
           ],
         ),
       ),
-      behavior: HitTestBehavior.translucent,
-      onTap: () {
-        widget.close.call(item);
-      },
     );
   }
 }
