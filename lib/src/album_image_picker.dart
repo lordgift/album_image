@@ -168,9 +168,9 @@ class _AlbumImagePickerState extends State<AlbumImagePicker>
 
   void _getPermission() async {
     var result = await PhotoManager.requestPermissionExtend(
-        requestOption: const PermisstionRequestOption(
+        requestOption: const PermissionRequestOption(
             iosAccessLevel: IosAccessLevel.readWrite));
-    if (result.isAuth) {
+    if (result == PermissionState.authorized || result == PermissionState.limited) {
       PhotoManager.startChangeNotify();
       PhotoManager.addChangeCallback((value) {
         _refreshPathList();
