@@ -40,9 +40,11 @@ class AppBarAlbum extends StatelessWidget {
     this.appBarColor,
     this.albumBackGroundColor,
     this.albumDividerColor,
-    this.albumHeaderTextStyle = const TextStyle(color: Colors.black, fontSize: 18),
+    this.albumHeaderTextStyle =
+    const TextStyle(color: Colors.black, fontSize: 18),
     this.albumTextStyle = const TextStyle(color: Colors.black, fontSize: 18),
-    this.albumSubTextStyle = const TextStyle(color: Colors.black, fontSize: 14),
+    this.albumSubTextStyle =
+    const TextStyle(color: Colors.black, fontSize: 14),
     this.height = 65,
     this.appBarLeadingWidget,
     this.appBarActionWidgets,
@@ -140,37 +142,36 @@ class AppBarAlbum extends StatelessWidget {
 
   Widget _buildActionButton(BuildContext context) {
     return ValueListenableBuilder(
-          valueListenable: provider.pickedNotifier,
-          builder: (_, value, __) =>
-              TextButton(
-                key: Key('button'),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.done_rounded,color: Colors.black,
+        valueListenable: provider.pickedNotifier,
+        builder: (_, value, __) =>
+            TextButton(
+              key: Key('button'),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.done_rounded,
+                    color: Colors.black,
+                  ),
+                  Text(
+                    ' (${provider.picked.length})',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
                     ),
-                    Text(
-                      ' (${provider.picked.length})',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-                onPressed: provider.picked.length > 0 ? () {
-                  onDone(provider.picked);
-                  Navigator.pop(context);
-                }: () => Navigator.pop(context),
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.transparent),
-                  // shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(3))),
-                ),
-              )
-      );
+                  ),
+                ],
+              ),
+              onPressed: () {
+                Navigator.pop(context, provider.picked);
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                // shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(3))),
+              ),
+            ));
   }
 }
 
@@ -217,14 +218,16 @@ class _ChangePathWidgetState extends State<ChangePathWidget> {
   void initState() {
     super.initState();
     currentIndex = provider.pathList.indexOf(provider.currentPath);
-    controller = ScrollController(initialScrollOffset: widget.itemHeight * currentIndex);
+    controller =
+        ScrollController(initialScrollOffset: widget.itemHeight * currentIndex);
   }
 
   @override
   Widget build(BuildContext context) {
     return Material(
       color: widget.albumBackGroundColor,
-      borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+      borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(16), topRight: Radius.circular(16)),
       child: MediaQuery.removePadding(
         removeTop: true,
         context: context,
@@ -234,7 +237,8 @@ class _ChangePathWidgetState extends State<ChangePathWidget> {
               width: 24,
               height: 4,
               margin: const EdgeInsets.all(10),
-              decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(18)),
+              decoration: BoxDecoration(
+                  color: Colors.grey, borderRadius: BorderRadius.circular(18)),
             ),
             Expanded(
               child: ListView.separated(
@@ -278,7 +282,8 @@ class _ChangePathWidgetState extends State<ChangePathWidget> {
                     Text(
                       item.name,
                       overflow: TextOverflow.ellipsis,
-                      style: widget.albumTextStyle ?? const TextStyle(color: Colors.white, fontSize: 18),
+                      style: widget.albumTextStyle ??
+                          const TextStyle(color: Colors.white, fontSize: 18),
                     ),
                     const SizedBox(
                       height: 4,
@@ -286,7 +291,8 @@ class _ChangePathWidgetState extends State<ChangePathWidget> {
                     Text(
                       '${item.assetCount}',
                       overflow: TextOverflow.ellipsis,
-                      style: widget.albumSubTextStyle ?? const TextStyle(color: Colors.white, fontSize: 14),
+                      style: widget.albumSubTextStyle ??
+                          const TextStyle(color: Colors.white, fontSize: 14),
                     ),
                   ],
                 ),
