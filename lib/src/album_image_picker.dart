@@ -2,12 +2,10 @@ import 'package:album_image/src/controller/gallery_provider.dart';
 import 'package:album_image/src/widgets/app_bar_album.dart';
 import 'package:album_image/src/widgets/gallery_grid_view.dart';
 import 'package:flutter/material.dart';
-import 'package:photo_manager/photo_manager.dart';
+import 'package:photo_manager/photo_manager.dart' hide AlbumType;
+import '../src/enum/album_type.dart';
 
-import 'enum/album_type.dart';
-
-typedef SelectionWidgetBuilder = Widget Function(
-    BuildContext context, bool selected, int index);
+typedef SelectionWidgetBuilder = Widget Function(BuildContext context, bool selected, int index);
 
 class AlbumImagePicker extends StatefulWidget {
   /// maximum images allowed (default 1)
@@ -97,7 +95,6 @@ class AlbumImagePicker extends StatefulWidget {
 
   final Widget? emptyAlbumThumbnail;
 
-
   const AlbumImagePicker(
       {Key? key,
       this.maxSelection = 1,
@@ -114,10 +111,8 @@ class AlbumImagePicker extends StatefulWidget {
       this.selectedItemBackgroundColor = Colors.grey,
       this.appBarColor = Colors.redAccent,
       this.albumTextStyle = const TextStyle(color: Colors.white, fontSize: 18),
-      this.albumHeaderTextStyle =
-          const TextStyle(color: Colors.white, fontSize: 18),
-      this.albumSubTextStyle =
-          const TextStyle(color: Colors.white, fontSize: 14),
+      this.albumHeaderTextStyle = const TextStyle(color: Colors.white, fontSize: 18),
+      this.albumSubTextStyle = const TextStyle(color: Colors.white, fontSize: 14),
       this.appBarHeight = 45,
       this.albumBackGroundColor = const Color(0xFF333333),
       this.albumDividerColor = const Color(0xFF484848),
@@ -136,8 +131,7 @@ class AlbumImagePicker extends StatefulWidget {
   _AlbumImagePickerState createState() => _AlbumImagePickerState();
 }
 
-class _AlbumImagePickerState extends State<AlbumImagePicker>
-    with AutomaticKeepAliveClientMixin {
+class _AlbumImagePickerState extends State<AlbumImagePicker> with AutomaticKeepAliveClientMixin {
   /// create object of PickerDataProvider
   late PickerDataProvider provider;
 
@@ -161,15 +155,13 @@ class _AlbumImagePickerState extends State<AlbumImagePicker>
   }
 
   void _initProvider() {
-    provider = PickerDataProvider(
-        picked: widget.selected ?? [], maxSelectionCount: widget.maxSelection);
+    provider = PickerDataProvider(picked: widget.selected ?? [], maxSelectionCount: widget.maxSelection);
     provider.onPickMax.addListener(onPickMax);
   }
 
   void _getPermission() async {
     var result = await PhotoManager.requestPermissionExtend(
-        requestOption: const PermissionRequestOption(
-            iosAccessLevel: IosAccessLevel.readWrite));
+        requestOption: const PermissionRequestOption(iosAccessLevel: IosAccessLevel.readWrite));
     if (result == PermissionState.authorized || result == PermissionState.limited) {
       PhotoManager.startChangeNotify();
       PhotoManager.addChangeCallback((value) {
@@ -250,8 +242,7 @@ class _AlbumImagePickerState extends State<AlbumImagePicker>
                     selectedBackgroundColor: widget.selectedItemBackgroundColor,
                     selectionBuilder: widget.selectionBuilder,
                     thumbnailBoxFix: widget.thumbnailBoxFix,
-                    selectedCheckBackgroundColor:
-                        widget.selectedItemBackgroundColor,
+                    selectedCheckBackgroundColor: widget.selectedItemBackgroundColor,
                     onAssetItemClick: (ctx, asset, index) async {
                       provider.pickEntity(asset);
                       // widget.onSelected(provider.picked);

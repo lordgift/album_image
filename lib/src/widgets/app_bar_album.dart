@@ -318,7 +318,7 @@ class _ChangePathWidgetState extends State<ChangePathWidget> {
                       height: 4,
                     ),
                     Text(
-                      '${item.assetCount}',
+                      '${item.assetCountAsync}',
                       overflow: TextOverflow.ellipsis,
                       style: widget.albumSubTextStyle ?? const TextStyle(color: Colors.white, fontSize: 14),
                     ),
