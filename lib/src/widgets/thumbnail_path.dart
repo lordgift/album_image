@@ -34,7 +34,7 @@ class ThumbnailPath extends ImageProvider<ThumbnailPath> {
     final bytes = await coverEntity
         .thumbnailDataWithSize(ThumbnailSize(thumbSize, thumbSize));
 
-    return decode(bytes!);
+    return ui.instantiateImageCodec(bytes!);
   }
 
   @override
