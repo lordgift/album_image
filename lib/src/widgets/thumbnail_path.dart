@@ -17,14 +17,14 @@ class ThumbnailPath extends ImageProvider<ThumbnailPath> {
   });
 
   @override
-  ImageStreamCompleter load(ThumbnailPath key, DecoderCallback decode) {
+  ImageStreamCompleter load(ThumbnailPath key, ImageDecoderCallback decode) {
     return MultiFrameImageStreamCompleter(
       codec: _loadAsync(key, decode),
       scale: key.scale,
     );
   }
 
-  Future<ui.Codec> _loadAsync(ThumbnailPath key, DecoderCallback decode) async {
+  Future<ui.Codec> _loadAsync(ThumbnailPath key, ImageDecoderCallback decode) async {
     assert(key == this);
 
     final coverEntity =
